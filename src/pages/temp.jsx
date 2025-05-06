@@ -1,8 +1,7 @@
 import { useState } from "react";
 import "./TaskNest.css";
-
-import TaskInput from "../components/TaskInput/TaskInput";
-import TaskList from "../components/TaskList/TaskList";
+import { BsFillTrash3Fill } from "react-icons/bs";
+import { BiSolidPencil } from "react-icons/bi";
 
 const TaskNest = () => {
   const [inputValue, setInputValue] = useState("");
@@ -11,6 +10,7 @@ const TaskNest = () => {
   //handle input
   const handleInput = (event) => {
     setInputValue(event.target.value);
+    console.log("input", event.target.value);
   };
 
   //handle add
@@ -30,7 +30,6 @@ const TaskNest = () => {
 
     if (isEditingTaskIndex !== -1) {
       newTaskNest[isEditingTaskIndex]["title"] = inputValue;
-      newTaskNest[isEditingTaskIndex]["isEditing"] = false;
     } else {
       newTaskNest.push(newTask);
       setTaskNest(newTaskNest);
@@ -59,7 +58,10 @@ const TaskNest = () => {
 
   //handle Edit task
   const handleEditTask = (taskIdToEdit) => {
+    console.log("taskIdToEdit", taskIdToEdit);
+
     const tempTaskNest = [...taskNest];
+    console.log("tempTaskNest", tempTaskNest);
 
     const taskIndex = tempTaskNest.findIndex(
       (task) => task.id === taskIdToEdit
@@ -72,17 +74,47 @@ const TaskNest = () => {
   return (
     <div className="task-nest-container">
       <h1>Task Nest</h1>
-      <TaskInput
-        inputValue={inputValue}
-        handleInput={handleInput}
-        handleAdd={handleAdd}
-      />
-      <TaskList
-        taskNest={taskNest}
-        handleDeleteTask={handleDeleteTask}
-        handleEditTask={handleEditTask}
-        handleTaskComplete={handleTaskComplete}
-      />
+      <div className="input-btn-container">
+        <input
+          type="text"
+          placeholder="Nest your tasks"
+          value={inputValue}
+          onChange={handleInput}
+          onKeyUp={(e) => e.key === "Enter" && handleAdd()}
+        />
+        <button
+          onClick={handleAdd}
+          className={`add-btn ${!inputValue.trim().length ? "disabled" : ""}`}
+          disabled={!inputValue.trim().length}
+        >
+          Add
+        </button>
+      </div>
+      <div className="task-list-container">
+        {taskNest.map((task, index) => {
+          return (
+            <div key={index} className="task-item">
+              <div>
+                <input
+                  type="checkbox"
+                  name="completed"
+                  onClick={(e) => handleTaskComplete(e, task.id)}
+                />
+                <span
+                  className={`${task.isCompleted ? "task-completed" : null}`}
+                >
+                  {task.title}
+                </span>
+              </div>
+
+              <div className="action-items">
+                <BsFillTrash3Fill onClick={() => handleDeleteTask(task.id)} />
+                <BiSolidPencil onClick={() => handleEditTask(task.id)} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

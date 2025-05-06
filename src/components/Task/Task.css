@@ -1,0 +1,28 @@
+.task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px solid #12528e;
+    padding: 12px 0;
+    input {
+      margin: 0 8px 0 0;
+      color: #145da0;
+    }
+
+    .task-completed {
+      text-decoration: line-through;
+    }
+    .edit{
+      opacity: 0.5;
+    }
+  }
+  .action-items {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    & > * {
+      cursor: pointer;
+    }
+  }
