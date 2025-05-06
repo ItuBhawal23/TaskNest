@@ -1,27 +1,13 @@
+import { useTaskActionContext } from "../../context/TaskActionContext/TaskActionContext";
 import Task from "../Task/Task";
 import "./TaskList.css";
 
-const TaskList = ({
-  taskNest,
-  handleDeleteTask,
-  handleEditTask,
-  handleTaskComplete
-}) => {
-  return (
-    <div className="task-list-container">
-      {taskNest.map((task, index) => {
-        return (
-          <Task
-            key={index}
-            task={task}
-            handleDeleteTask={handleDeleteTask}
-            handleEditTask={handleEditTask}
-            handleTaskComplete={handleTaskComplete}
-          />
-        );
-      })}
-    </div>
-  );
+const TaskList = () => {
+  const { taskNest } = useTaskActionContext();
+  const getTaskList = () => {
+    return taskNest.map((task, index) => <Task key={index} task={task} />);
+  };
+  return <div className="task-list-container">{getTaskList()}</div>;
 };
 
 export default TaskList;

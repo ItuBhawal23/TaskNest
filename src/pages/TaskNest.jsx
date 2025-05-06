@@ -1,88 +1,16 @@
-import { useState } from "react";
-import "./TaskNest.css";
-
 import TaskInput from "../components/TaskInput/TaskInput";
 import TaskList from "../components/TaskList/TaskList";
+import { TaskActionsProvider } from "../context/TaskActionContext/TaskActionContext";
+import "./TaskNest.css";
 
 const TaskNest = () => {
-  const [inputValue, setInputValue] = useState("");
-  const [taskNest, setTaskNest] = useState([]);
-
-  //handle input
-  const handleInput = (event) => {
-    setInputValue(event.target.value);
-  };
-
-  //handle add
-  const handleAdd = () => {
-    const newTask = {
-      id: crypto.randomUUID(),
-      title: inputValue,
-      isCompleted: false,
-      isEditing: false
-    };
-
-    const newTaskNest = [...taskNest];
-
-    const isEditingTaskIndex = newTaskNest.findIndex(
-      (task) => task.isEditing === true
-    );
-
-    if (isEditingTaskIndex !== -1) {
-      newTaskNest[isEditingTaskIndex]["title"] = inputValue;
-      newTaskNest[isEditingTaskIndex]["isEditing"] = false;
-    } else {
-      newTaskNest.push(newTask);
-      setTaskNest(newTaskNest);
-    }
-    setInputValue("");
-  };
-
-  //handle delete task
-  const handleDeleteTask = (taskIdToDelete) => {
-    const updatedList = taskNest.filter((task) => task.id !== taskIdToDelete);
-    setTaskNest(updatedList);
-  };
-
-  //handle complete tasks
-  const handleTaskComplete = (event, taskIdToComplete) => {
-    const isChecked = event.target.checked;
-
-    const tempTaskNest = [...taskNest];
-
-    const taskIndex = tempTaskNest.findIndex(
-      (task) => task.id === taskIdToComplete
-    );
-    tempTaskNest[taskIndex]["isCompleted"] = isChecked;
-    setTaskNest(tempTaskNest);
-  };
-
-  //handle Edit task
-  const handleEditTask = (taskIdToEdit) => {
-    const tempTaskNest = [...taskNest];
-
-    const taskIndex = tempTaskNest.findIndex(
-      (task) => task.id === taskIdToEdit
-    );
-    tempTaskNest[taskIndex]["isEditing"] = true;
-    setTaskNest(tempTaskNest);
-    setInputValue(tempTaskNest[taskIndex]["title"]);
-  };
-
   return (
     <div className="task-nest-container">
       <h1>Task Nest</h1>
-      <TaskInput
-        inputValue={inputValue}
-        handleInput={handleInput}
-        handleAdd={handleAdd}
-      />
-      <TaskList
-        taskNest={taskNest}
-        handleDeleteTask={handleDeleteTask}
-        handleEditTask={handleEditTask}
-        handleTaskComplete={handleTaskComplete}
-      />
+      <TaskActionsProvider>
+        <TaskInput />
+        <TaskList />
+      </TaskActionsProvider>
     </div>
   );
 };

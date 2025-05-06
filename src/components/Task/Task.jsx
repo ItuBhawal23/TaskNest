@@ -1,13 +1,11 @@
 import { BsFillTrash3Fill } from "react-icons/bs";
 import { BiSolidPencil } from "react-icons/bi";
 import "./Task.css";
+import { useTaskActionContext } from "../../context/TaskActionContext/TaskActionContext";
 
-const Task = ({
-  task,
-  handleDeleteTask,
-  handleEditTask,
-  handleTaskComplete
-}) => {
+const Task = ({ task }) => {
+  const { handleDeleteTask, handleTaskComplete, handleEditTask } =
+    useTaskActionContext();
   return (
     <div className="task-item">
       <div>
@@ -15,7 +13,7 @@ const Task = ({
           type="checkbox"
           name="completed"
           checked={task.isCompleted}
-          onClick={(e) => handleTaskComplete(e, task.id)}
+          onChange={(e) => handleTaskComplete(e, task.id)}
         />
         <span
           className={`${task.isCompleted ? "task-completed" : null} ${
